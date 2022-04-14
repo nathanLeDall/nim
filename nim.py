@@ -101,10 +101,7 @@ class NimAI():
         Return the Q-value for the state `state` and the action `action`.
         If no Q-value exists yet in `self.q`, return 0.
         """
-        #print(f"thingy {list(self.q) = }")
-        x = self.q[tuple(state),action] if (tuple(state),action) in list(self.q) else 0
-        #print(x)
-        return x
+        return self.q[tuple(state),action] if (tuple(state),action) in list(self.q) else 0
 
     def update_q_value(self, state, action, old_q, reward, future_rewards):
         """
@@ -122,9 +119,6 @@ class NimAI():
         is the sum of the current reward and estimated future rewards.
         """
         tmp = tuple(state)
-        #print(f'{old_q = }')
-        #print(f'{reward = }')
-        #print(f'{future_rewards = }')
         self.q[tmp,action] = old_q + self.alpha*(reward+future_rewards-old_q)
 
     def best_future_reward(self, state):
@@ -141,7 +135,6 @@ class NimAI():
         if Nim(state).available_actions(state)==set(): return 0
         best = -9999999999999999
         for action in Nim(state).available_actions(state):
-            
             if (tmp,action) in list(self.q) and self.q[tmp,action]>best:
                 best = self.q[tmp,action]
         return best if best!=-9999999999999999 else 0
@@ -166,18 +159,13 @@ class NimAI():
         bestaction = None
         if epsilon:
             bestaction = random.choice(list(Nim(state).available_actions(state))) if random.uniform(0,1)<= self.epsilon else None
-            #print(f"first {bestaction = }")
         best = -999999999999999
         if bestaction==None:
-            #print(Nim(state).available_actions(state))
             for action in Nim(state).available_actions(state):
-                #print(f'{self.q[tmp,action] if (tmp,action) in list(self.q) else "no"}\n {best = }')
                 if (tmp,action) in list(self.q) and self.q[tmp,action]>best:
-                    #print(f'loop {action = }')
                     best = self.q[tmp,action]
                     bestaction = action
         return bestaction if bestaction!=None else next(iter(Nim(state).available_actions(state)))
-        # fix it dont work at all
 
 
 def train(n):
